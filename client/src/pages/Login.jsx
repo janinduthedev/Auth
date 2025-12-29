@@ -1,15 +1,16 @@
 import { useState } from "react";
-import axios from "axios"; // කෙළින්ම axios පාවිච්චි කරනවා
+import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false); // State to track API request status
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading
     try {
-      // මෙතනත් සම්පූර්ණ URL එකම පාවිච්චි කරනවා
       const res = await axios.post(
         "http://localhost:5000/api/auth/login",
         formData
@@ -19,6 +20,8 @@ const Login = () => {
       navigate("/dashboard");
     } catch (err) {
       alert(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false); // Stop loading regardless of success or failure
     }
   };
 
@@ -41,6 +44,7 @@ const Login = () => {
               setFormData({ ...formData, email: e.target.value })
             }
           />
+
           <input
             type="password"
             placeholder="Password"
@@ -50,11 +54,17 @@ const Login = () => {
               setFormData({ ...formData, password: e.target.value })
             }
           />
+
           <button
             type="submit"
-            className="w-full bg-emerald-600 text-white p-3 rounded-lg font-bold hover:bg-emerald-700 transition"
+            disabled={loading} // Disable button while loading
+            className={`w-full p-3 rounded-lg font-bold text-white transition ${
+              loading
+                ? "bg-emerald-400 cursor-not-allowed"
+                : "bg-emerald-600 hover:bg-emerald-700"
+            }`}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </div>
         <p className="mt-4 text-center">

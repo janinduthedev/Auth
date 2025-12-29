@@ -1,8 +1,9 @@
 import { useState } from "react";
-import axios from "axios"; // කෙළින්ම axios පාවිච්චි කරනවා
+import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
+  // State to hold input values
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -10,17 +11,20 @@ const Register = () => {
   });
   const navigate = useNavigate();
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // වෙනම api.js එකක් නැතුව මෙතනම URL එක දානවා
+      // Sending POST request to backend API
       const res = await axios.post(
         "http://localhost:5000/api/auth/register",
         formData
       );
       alert(res.data.message);
+      // Redirect to login page on success
       navigate("/login");
     } catch (err) {
+      // Display error message from server or default message
       alert(err.response?.data?.message || "Registration failed");
     }
   };
@@ -42,6 +46,7 @@ const Register = () => {
             required
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
+
           <input
             type="email"
             placeholder="Email"
@@ -51,6 +56,7 @@ const Register = () => {
               setFormData({ ...formData, email: e.target.value })
             }
           />
+
           <input
             type="password"
             placeholder="Password"
@@ -60,6 +66,7 @@ const Register = () => {
               setFormData({ ...formData, password: e.target.value })
             }
           />
+
           <button
             type="submit"
             className="w-full bg-indigo-600 text-white p-3 rounded-lg font-bold hover:bg-indigo-700 transition"
