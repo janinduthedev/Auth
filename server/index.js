@@ -4,14 +4,17 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 
 const app = express();
-app.listen(5000, () => console.log("Server running on port 5000 🚀"));
-
 dotenv.config();
 
-app.use(express.json());
+// --- Middlewares Setup ---
+app.use(express.json()); // Support JSON
+app.use(cors());         // Allow access
 
-app.use(cors());
-
+// --- Database Connection ---
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected... ✅"))
-  .catch(err => console.error("Connection Error: ❌", err));
+  .catch(err => console.error("Error: ❌", err));
+
+// --- Server Port ---
+const PORT = 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT} 🚀`));
