@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import authRoutes from './routes/AuthRoutes.js';
 
 const app = express();
 dotenv.config();
@@ -9,6 +10,8 @@ dotenv.config();
 // --- Middlewares Setup ---
 app.use(express.json()); // Support JSON
 app.use(cors());         // Allow access
+
+app.use('/api/auth', authRoutes);
 
 // --- Database Connection ---
 mongoose.connect(process.env.MONGO_URI)
