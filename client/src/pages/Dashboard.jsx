@@ -1,61 +1,62 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode"; // Import the decoder
+import axios from "axios";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [userName, setUserName] = useState("");
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    // Get user data from backend
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
 
-    if (!token) {
-      navigate("/login");
-    } else {
+      // If no token, go back to login page
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
       try {
-        // Decode the token to get user details
-        const decoded = jwtDecode(token);
-        // In our backend, we put the name in the token payload
-        setUserName(decoded.name || "User");
+        // Call the private API with the token
+        const res = await axios.get("http://localhost:5000/api/auth/me", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Attach token
+          },
+        });
+        setUser(res.data.user); // Save user to state
       } catch (error) {
-        // If token is invalid, logout the user
+        // If something goes wrong, logout the user
         localStorage.removeItem("token");
         navigate("/login");
       }
-    }
+    };
+
+    fetchUser();
   }, [navigate]);
 
+  // Logout function
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
   };
 
+  // Show this while waiting for data
+  if (!user) return <div className="text-center mt-10">Loading...</div>;
+
   return (
-    <div className="min-h-screen bg-gray-100 font-sans">
-      <nav className="bg-indigo-600 p-4 text-white shadow-lg flex justify-between items-center">
-        <h1 className="text-xl font-bold">My Auth App</h1>
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition font-medium"
-        >
+    <div className="min-h-screen bg-gray-100">
+      <nav className="bg-indigo-600 p-4 text-white flex justify-between">
+        <h1 className="font-bold">Dashboard</h1>
+        <button onClick={handleLogout} className="bg-red-500 px-3 py-1 rounded">
           Logout
         </button>
       </nav>
 
-      <div className="flex flex-col items-center justify-center mt-20">
-        <div className="bg-white p-10 rounded-2xl shadow-xl text-center max-w-sm w-full border border-gray-200">
-          <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl text-indigo-600 font-bold uppercase">
-              {userName.charAt(0)}
-            </span>
-          </div>
-          {/* Displaying the Actual Name from the Token */}
-          <h2 className="text-2xl font-bold text-gray-800">
-            Hello, {userName}! 👋
-          </h2>
-          <p className="text-gray-500 mt-2">
-            Welcome back to your personalized dashboard.
-          </p>
+      <div className="flex justify-center mt-20">
+        <div className="bg-white p-8 rounded shadow-md text-center">
+          <h2 className="text-xl font-bold">Hello, {user.name}!</h2>
+          <p className="text-gray-600">You are successfully logged in.</p>
         </div>
       </div>
     </div>

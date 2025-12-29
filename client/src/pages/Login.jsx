@@ -31,14 +31,14 @@ const Login = () => {
         onSubmit={handleSubmit}
         className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg"
       >
-        <h2 className="text-3xl font-extrabold mb-6 text-center text-emerald-600">
+        <h2 className="text-3xl font-extrabold mb-6 text-center text-indigo-600">
           Login
         </h2>
         <div className="space-y-4">
           <input
             type="email"
             placeholder="Email"
-            className="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-emerald-400"
+            className="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-indigo-400"
             required
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
@@ -48,7 +48,7 @@ const Login = () => {
           <input
             type="password"
             placeholder="Password"
-            className="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-emerald-400"
+            className="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-indigo-400"
             required
             onChange={(e) =>
               setFormData({ ...formData, password: e.target.value })
@@ -60,8 +60,8 @@ const Login = () => {
             disabled={loading} // Disable button while loading
             className={`w-full p-3 rounded-lg font-bold text-white transition ${
               loading
-                ? "bg-emerald-400 cursor-not-allowed"
-                : "bg-emerald-600 hover:bg-emerald-700"
+                ? "bg-indigo-600 cursor-not-allowed"
+                : "bg-indigo-600 hover:bg-indigo-700"
             }`}
           >
             {loading ? "Logging in..." : "Login"}
@@ -69,7 +69,7 @@ const Login = () => {
         </div>
         <p className="mt-4 text-center">
           New here?{" "}
-          <Link to="/register" className="text-emerald-600 underline">
+          <Link to="/register" className="text-indigo-600 underline">
             Register
           </Link>
         </p>
