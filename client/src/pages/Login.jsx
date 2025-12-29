@@ -10,9 +10,9 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await API.post("/login", formData);
-      localStorage.setItem("token", res.data.token); // Token එක සේව් කරනවා
+      localStorage.setItem("token", res.data.token);
       alert("Login Successful! ✅");
-      navigate("/"); // Home එකට යවනවා
+      navigate("/");
     } catch (err) {
       alert(err.response?.data?.message || "Login failed");
     }
